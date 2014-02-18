@@ -11,10 +11,14 @@ import java.util.Set;
 
 @Entity
 @Table(name = "roles")
+@NamedQueries(
+        {@NamedQuery(name = Role.ROLE_BY_NAME, query = "from Role r where r.roleName = :role_name")}
+)
 public class Role implements Serializable {
     private int id;
     private String roleName;
     private Set<User> users = new HashSet<User>();
+    public static final String ROLE_BY_NAME = "role.by.name";
 
     public Role() {
     }

@@ -2,6 +2,7 @@ package com.epam.users;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import java.sql.Date;
 
 /**
@@ -12,10 +13,11 @@ public class Runner {
     public static void main(String[] args) {
         EntityManager entityManager = Persistence.createEntityManagerFactory("Users").createEntityManager();
         entityManager.getTransaction().begin();
-        Role role = new Role();
-        role.setRoleName("user");
+        Query query = entityManager.createNamedQuery(Role.ROLE_BY_NAME);
+        query.setParameter("role_name","admin");
+        Role role = (Role) query.getSingleResult();
         User user = new User();
-        user.setName("Andrey");
+        user.setName("Ivan");
         user.setDateOfBirth(new Date(20019991003L));
         user.setPassword("123");
         user.setTelephone("5556688");

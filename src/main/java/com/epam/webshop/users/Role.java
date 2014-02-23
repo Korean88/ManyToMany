@@ -1,4 +1,4 @@
-package com.epam.users;
+package com.epam.webshop.users;
 
 import javax.persistence.*;
 import java.io.Serializable;

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="ejb-jar" name="ManyToMany:ejb">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="manytomany-1.0-SNAPSHOT.jar">
+      <element id="artifact" artifact-name="ManyToMany:ejb exploded" />
+    </root>
+  </artifact>
+</component>

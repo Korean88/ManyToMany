@@ -22,9 +22,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="Client" />
         <module name="ManyToMany" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Client" target="1.6" />
+      <module name="ManyToMany" target="1.6" />
+    </bytecodeTargetLevel>
   </component>
 </project>
 

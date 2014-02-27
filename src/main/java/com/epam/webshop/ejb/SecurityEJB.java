@@ -5,7 +5,6 @@ import com.epam.webshop.exception.LoginOrEmailNotUniqueException;
 import com.epam.webshop.exception.LoginPasswordIncorrectException;
 import com.epam.webshop.exception.NoLoginEmailCorrespondenceException;
 import com.epam.webshop.users.User;
-import com.epam.webshop.utils.PasswordEncoder;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -25,8 +24,7 @@ public class SecurityEJB implements SecurityRemote {
     private EntityManager entityManager;
 
     @Override
-    public User checkLoginPassword(String login, String plainPassword) throws LoginPasswordIncorrectException {
-        String passwordHash = PasswordEncoder.sha2Encode(plainPassword);
+    public User checkLoginPassword(String login, String passwordHash) throws LoginPasswordIncorrectException {
         Query query = entityManager.createNamedQuery(User.FIND_BY_LOGIN_PASS);
         query.setParameter("login",login);
         query.setParameter("pass",passwordHash);
@@ -68,7 +66,7 @@ public class SecurityEJB implements SecurityRemote {
     }
 
     @Override
-    public boolean changePassword(String login, String answer, String newPlainPassword)
+    public boolean changePassword(String login, String answer, String newPasswordHash)
             throws IncorrectSecretAnswerException {
         Query query = entityManager.createNamedQuery(User.FIND_BY_LOGIN_AND_ANSWER);
         query.setParameter("login", login);
@@ -76,8 +74,7 @@ public class SecurityEJB implements SecurityRemote {
         User user = null;
         try {
             user = (User) query.getSingleResult();
-            String passwordHash = PasswordEncoder.sha2Encode(newPlainPassword);
-            user.setPassword(passwordHash);
+            user.setPassword(newPasswordHash);
             entityManager.merge(user);
         } catch (NoResultException e) {
             throw new IncorrectSecretAnswerException();

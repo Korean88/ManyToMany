@@ -1,42 +1,15 @@
 package com.epam.webshop.users;
 
+import com.epam.webshop.utils.PasswordEncoder;
+
 /**
  * Created by Andrey Yun on 16.02.14.
  */
 public class Runner {
-/*
-    public static void main(String[] args) throws LoginOrEmailNotUniqueException {
-        EntityManager entityManager = Persistence.createEntityManagerFactory("Users").createEntityManager();
-        entityManager.getTransaction().begin();
-        Query query = entityManager.createNamedQuery(Role.ROLE_BY_NAME);
-        query.setParameter("role_name","admin");
-        Role role = (Role) query.getSingleResult();
-        User user = new User();
-        user.setFirstName("Ivan");
-        user.setLastName("Ivanov");
-        Calendar calendar = new GregorianCalendar();
-        calendar.set(Calendar.YEAR,1988);
-        calendar.set(Calendar.MONTH,2);
-        calendar.set(Calendar.DAY_OF_MONTH,10);
-        java.util.Date date = calendar.getTime();
-        user.setDateOfBirth(date);
-        user.setEmail("aaa@aa.aa");
-        user.setLogin("Ivan1");
-        user.setPassword("123");
-        user.setTelephone("5556688");
-        user.setSecretQuestion("???");
-        user.setSecretAnswer("answer");
-        user.getRoles().add(role);
-        Query checkExistence = entityManager.createNamedQuery(User.FIND_BY_LOGIN_OR_EMAIL);
-        checkExistence.setParameter("login",user.getLogin());
-        checkExistence.setParameter("email",user.getEmail());
-        List<User> notUniqueUser = checkExistence.getResultList();
-        if (notUniqueUser != null && notUniqueUser.size() != 0) {
-            throw new LoginOrEmailNotUniqueException();
-        }
-        entityManager.merge(user);
-        entityManager.getTransaction().commit();
-        entityManager.close();
-    }*/
+
+    public static void main(String[] args) {
+        String passwordHash = PasswordEncoder.sha2Encode("testPass1221212");
+        System.out.println(passwordHash);
+    }
 
 }

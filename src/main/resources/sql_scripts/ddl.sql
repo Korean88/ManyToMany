@@ -11,8 +11,8 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Дамп структуры базы данных webshop
-CREATE DATABASE IF NOT EXISTS `webshop` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `webshop`;
+CREATE DATABASE IF NOT EXISTS `user_role` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `user_role`;
 
 
 -- Дамп структуры для таблица webshop.roles

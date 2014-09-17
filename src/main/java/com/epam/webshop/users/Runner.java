@@ -1,12 +1,35 @@
 package com.epam.webshop.users;
 
+import com.epam.webshop.ejb.UserServiceLocal;
+import com.epam.webshop.exception.LoginOrEmailNotUniqueException;
+import javax.inject.Inject;
+
+import javax.ejb.EJB;
+import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 /**
  * Created by Andrey Yun on 16.02.14.
  */
 public class Runner {
-/*
+/*    public UserServiceLocal getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserServiceLocal userService) {
+        this.userService = userService;
+    }
+
+    @Inject
+    private UserServiceLocal userService;
+
     public static void main(String[] args) throws LoginOrEmailNotUniqueException {
-        EntityManager entityManager = Persistence.createEntityManagerFactory("Users").createEntityManager();
+        *//*EntityManager entityManager = Persistence.createEntityManagerFactory("Users").createEntityManager();
         entityManager.getTransaction().begin();
         Query query = entityManager.createNamedQuery(Role.ROLE_BY_NAME);
         query.setParameter("role_name","admin");
@@ -36,7 +59,7 @@ public class Runner {
         }
         entityManager.merge(user);
         entityManager.getTransaction().commit();
-        entityManager.close();
+        entityManager.close();*//*
     }*/
 
 }

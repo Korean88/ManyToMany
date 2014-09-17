@@ -25,11 +25,16 @@
         <version.ejb.plugin>2.3</version.ejb.plugin>
 
         <!-- maven-compiler-plugin -->
-        <maven.compiler.target>1.6</maven.compiler.target>
-        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
 
         <!-- Optional: to use jboss-as:run goal -->
         <!--<jboss-as.home>C:\Users\iByteCode\Desktop\jboss-as-7.1.0.Final</jboss-as.home> -->
+
+        <version.junit>4.11</version.junit>
+        <version.javaee_api>7.0</version.javaee_api>
+        <version.arquillian_core>1.1.4.Final</version.arquillian_core>
+        <version.wildfly>8.0.0.Final</version.wildfly>
     </properties>
 
     <dependencyManagement>
@@ -41,12 +46,19 @@
                 of artifacts. Here we use the jboss-javaee-6.0 stack (you can read this as
                 the JBoss stack of the Java EE 6 APIs). You can actually use this stack with
                 any version of JBoss AS that implements Java EE 6, not just JBoss AS 7! -->
-            <dependency>
+<!--            <dependency>
                 <groupId>org.jboss.spec</groupId>
                 <artifactId>jboss-javaee-6.0</artifactId>
                 <version>${version.org.jboss.spec.jboss.javaee.6.0}</version>
                 <type>pom</type>
                 <scope>provided</scope>
+            </dependency>-->
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${version.arquillian_core}</version>
+                <scope>import</scope>
+                <type>pom</type>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -88,18 +100,34 @@
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>${version.javaee_api}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit</groupId>
+            <artifactId>arquillian-junit-container</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <!-- Set the name of the deployment -->
         <plugins>
-            <!-- JBoss AS plugin to deploy the application -->
             <plugin>
-                <groupId>org.jboss.as.plugins</groupId>
-                <artifactId>jboss-as-maven-plugin</artifactId>
-                <version>${version.org.jboss.as.plugins.maven.plugin}</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.1.1</version>
                 <configuration>
-                    <filename>${project.build.finalName}.jar</filename>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
             </plugin>
             <!-- Compiler plugin enforces Java 1.6 compatibility and activates annotation
@@ -112,25 +140,103 @@
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
-            <plugin>
+<!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ejb-plugin</artifactId>
                 <version>${version.ejb.plugin}</version>
                 <configuration>
                     <ejbVersion>3.1</ejbVersion>
-                    <!-- this is false by default -->
+                    &lt;!&ndash; this is false by default &ndash;&gt;
                     <generateClient>false</generateClient>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12.4</version>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>wildfly-managed-arquillian</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <serverProfile>standalone-full.xml</serverProfile>
+                <serverRoot>${project.build.directory}/wildfly-${version.wildfly}</serverRoot>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>io.undertow</groupId>
+                    <artifactId>undertow-websockets-jsr</artifactId>
+                    <version>1.0.0.Beta25</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.resteasy</groupId>
+                    <artifactId>resteasy-client</artifactId>
+                    <version>3.0.5.Final</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.resteasy</groupId>
+                    <artifactId>resteasy-jaxb-provider</artifactId>
+                    <version>3.0.5.Final</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.jboss.resteasy</groupId>
+                    <artifactId>resteasy-json-p-provider</artifactId>
+                    <version>3.0.5.Final</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.wildfly</groupId>
+                    <artifactId>wildfly-arquillian-container-managed</artifactId>
+                    <version>${version.wildfly}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>2.8</version>
+                        <configuration>
+                            <skip>false</skip>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>unpack</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wildfly</groupId>
+                                            <artifactId>wildfly-dist</artifactId>
+                                            <version>${version.wildfly}</version>
+                                            <type>zip</type>
+                                            <overWrite>false</overWrite>
+                                            <outputDirectory>${project.build.directory}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.17</version>
+                        <configuration>
+                            <environmentVariables>
+                                <JBOSS_HOME>${project.build.directory}/wildfly-${version.wildfly}</JBOSS_HOME>
+                            </environmentVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

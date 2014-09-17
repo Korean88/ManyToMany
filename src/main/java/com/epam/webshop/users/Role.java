@@ -12,13 +12,15 @@ import java.util.Set;
 @Entity
 @Table(name = "roles")
 @NamedQueries(
-        {@NamedQuery(name = Role.ROLE_BY_NAME, query = "from Role r where r.roleName = :role_name")}
+        {@NamedQuery(name = Role.ROLE_BY_NAME, query = "from Role r where r.roleName = :role_name"),
+         @NamedQuery(name = Role.All_ROLES, query = "select r from Role r")}
 )
 public class Role implements Serializable {
     private int id;
     private String roleName;
     private Set<User> users = new HashSet<User>();
     public static final String ROLE_BY_NAME = "role.by.name";
+    public static final String All_ROLES = "all.roles";
 
     public Role() {
     }
